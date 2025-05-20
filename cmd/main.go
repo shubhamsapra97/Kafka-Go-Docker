@@ -23,6 +23,7 @@ func main() {
 	r.HandleFunc("/createTask", h.CreateTask).Methods("POST")
 	r.HandleFunc("/tasks", h.GetTasks).Methods("GET")
 	r.HandleFunc("/tasks/{id}", h.UpdateTask).Methods("PUT")
+	r.HandleFunc("/tasks/{id}", h.DeleteTask).Methods("DELETE")
 
 	http.ListenAndServe(":8080", r)
 }

@@ -69,3 +69,28 @@ func (r *TaskRepository) Update(task *model.Task) error {
 	// Commit the transaction
     return tx.Commit(context.Background())
 }
+
+func (r *TaskRepository) Delete(id int) error {
+	// Begin a transaction
+    tx, err := db.DB.Begin(context.Background())
+    if err != nil {
+        return err
+    }
+    defer tx.Rollback(context.Background())
+
+    // Lock the row for delete
+    row := tx.QueryRow(context.Background(), "SELECT id FROM tasks WHERE id=$1 FOR UPDATE", id)
+    var lockedId int
+    if err := row.Scan(&lockedId); err != nil {
+        return err // row not found or other error
+    }
+
+    // Perform the delete
+    _, err = tx.Exec(context.Background(), "DELETE FROM tasks WHERE id=$1", id)
+    if err != nil {
+        return err
+    }
+
+	// Commit the transaction
+    return tx.Commit(context.Background())
+}

@@ -24,3 +24,8 @@ func (s *TaskService) Update(task *model.Task) error {
 	task.UpdatedAt = time.Now()
 	return s.Repo.Update(task)
 }
+
+// we can soft delete the task by setting its status to "deleted"
+func (s *TaskService) Delete(id int) error {
+	return s.Repo.Delete(id)
+}
