@@ -21,6 +21,7 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/createTask", h.CreateTask).Methods("POST")
+	r.HandleFunc("/tasks", h.GetTasks).Methods("GET")
 
 	http.ListenAndServe(":8080", r)
 }

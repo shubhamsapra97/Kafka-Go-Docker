@@ -15,3 +15,7 @@ func (s *TaskService) Create(task *model.Task) error {
 	task.UpdatedAt = task.CreatedAt
 	return s.Repo.Create(task)
 }
+
+func (s *TaskService) GetAll(status string, limit, offset int) ([]model.Task, error) {
+	return s.Repo.GetAll(status, limit, offset)
+}
