@@ -18,3 +18,20 @@ func InitDB() {
 	}
 	fmt.Println("Connected to database")
 }
+
+func SetupDb() {
+	fmt.Println("Setting up database...")
+    query := `
+    CREATE TABLE IF NOT EXISTS tasks (
+        id SERIAL PRIMARY KEY,
+        title TEXT NOT NULL,
+        status TEXT NOT NULL,
+        created_at TIMESTAMP NOT NULL,
+        updated_at TIMESTAMP NOT NULL
+    );`
+    _, err := DB.Exec(context.Background(), query)
+    if err != nil {
+        log.Fatalf("Failed to run migration: %v\n", err)
+    }
+	fmt.Println("Database setup complete")
+}
