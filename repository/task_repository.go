@@ -42,3 +42,30 @@ func (r *TaskRepository) GetAll(status string, limit, offset int) ([]model.Task,
 	}
 	return tasks, nil
 }
+
+func (r *TaskRepository) Update(task *model.Task) error {
+	// Begin a transaction
+    tx, err := db.DB.Begin(context.Background())
+    if err != nil {
+        return err
+    }
+    defer tx.Rollback(context.Background())
+
+    // Lock the row for update
+    row := tx.QueryRow(context.Background(), "SELECT id FROM tasks WHERE id=$1 FOR UPDATE", task.ID)
+    var id int
+    if err := row.Scan(&id); err != nil {
+        return err // row not found or other error
+    }
+
+    // Perform the update
+    _, err = tx.Exec(context.Background(),
+        "UPDATE tasks SET title=$1, status=$2, updated_at=$3 WHERE id=$4",
+        task.Title, task.Status, task.UpdatedAt, task.ID)
+    if err != nil {
+        return err
+    }
+
+	// Commit the transaction
+    return tx.Commit(context.Background())
+}

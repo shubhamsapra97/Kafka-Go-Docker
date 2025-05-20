@@ -19,3 +19,8 @@ func (s *TaskService) Create(task *model.Task) error {
 func (s *TaskService) GetAll(status string, limit, offset int) ([]model.Task, error) {
 	return s.Repo.GetAll(status, limit, offset)
 }
+
+func (s *TaskService) Update(task *model.Task) error {
+	task.UpdatedAt = time.Now()
+	return s.Repo.Update(task)
+}

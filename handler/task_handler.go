@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"task-service/model"
 	"task-service/service"
+
+	"github.com/gorilla/mux"
 )
 
 type TaskHandler struct {
@@ -42,4 +44,19 @@ func (h *TaskHandler) GetTasks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(tasks)
+}
+
+func (h *TaskHandler) UpdateTask(w http.ResponseWriter, r *http.Request) {
+	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+	var t model.Task
+	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	t.ID = id
+	if err := h.Service.Update(&t); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	json.NewEncoder(w).Encode(t)
 }
