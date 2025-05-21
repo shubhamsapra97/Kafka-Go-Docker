@@ -25,18 +25,18 @@ docker-compose down -v
 To interact with the Task Service via POSTMAN, you can use the following endpoints:
 
 - `POST   /createTask` — Create a new task
-   curl -X POST -H "Content-Type: application/json" -d '{"title":"Write blog","status":"Pending"}' http://localhost:8080/tasks
+   - curl -X POST -H "Content-Type: application/json" -d '{"title":"Write blog","status":"Pending"}' http://localhost:8080/tasks
 
 - `GET    /tasks`      — List tasks
-   curl "http://localhost:8080/tasks?status=Pending&limit=5&offset=0"
+   - curl "http://localhost:8080/tasks?status=Pending&limit=5&offset=0"
 
 - `PUT    /tasks/{id}` — Update a task
-   curl -X PUT http://localhost:8080/tasks/1 \
+   - curl -X PUT http://localhost:8080/tasks/1 \
     -H "Content-Type: application/json" \
     -d '{"title": "Updated Task Title", "status": "Completed"}'
     
 - `DELETE /tasks/{id}` — Delete a task
-   curl -X DELETE http://localhost:8080/tasks/1
+   - curl -X DELETE http://localhost:8080/tasks/1
 
 ## 3. Kafka Integration
 
@@ -52,12 +52,13 @@ NOTE: This kafka consumer is for demonstration purposes only. As there is no pro
 - For any issues, check logs with `docker-compose logs <service>`.
   - Eg: `docker-compose logs app`
   - `docker-compose logs kafka`
+- Update and Delete have lock in place to avoid conflicts
 
 ## 5. System Design:
 
 If I add another microservice (like a User Service), the services can communicate using message queues (Kafka). For example, the User Service can publish events to the `tasks` topic, and the Task Service will automatically consume and process those events based on their type. This keeps things decoupled and scalable. REST or gRPC are also options, but Kafka is already integrated and works well for async workflows.
 
-To scale task service horizontally, I can run multiple instances of the Task Service behind a load balancer. Since the service is stateless and uses Postgres and Kafka, each instance can handle requests or consume messages independently. This way, the system can handle more load just by adding more containers.
+To scale task service horizontally, I can run multiple instances of the Task Service behind a load balancer. Since the service is stateless and uses Postgres and Kafka, each instance can handle requests or consume messages independently. This way, the system can handle more load just by adding more containers. Update and Delete have lock in place to avoid conflicts.
 
 ## 6. TODOS:
 
