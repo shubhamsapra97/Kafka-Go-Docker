@@ -11,7 +11,8 @@ var DB *pgxpool.Pool
 
 func InitDB() {
 	var err error
-	connStr := "postgres://user:password@localhost:5432/taskdb"
+	// TODO: Use environment variables for sensitive data
+	connStr := "postgres://user:password@db:5432/taskdb"
 	DB, err = pgxpool.Connect(context.Background(), connStr)
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)

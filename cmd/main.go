@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"task-service/db"
+	"task-service/kafka"
 	"task-service/handler"
 	"task-service/repository"
 	"task-service/service"
@@ -17,6 +18,9 @@ func main() {
 	repo := &repository.TaskRepository{}
 	svc := &service.TaskService{Repo: repo}
 	h := &handler.TaskHandler{Service: svc}
+
+	// Start Kafka consumer as independent goroutine (in background)
+	go kafka.StartTaskConsumer(svc)
 
 	r := mux.NewRouter()
 
