@@ -52,13 +52,13 @@ NOTE: This kafka consumer is for demonstration purposes only. As there is no pro
 - For any issues, check logs with `docker-compose logs <service>`.
   - Eg: `docker-compose logs app`
   - `docker-compose logs kafka`
-- Update and Delete have lock in place to avoid conflicts
+- Update and Delete Api's have lock in place to avoid conflicts
 
 ## 5. System Design:
 
 If I add another microservice (like a User Service), the services can communicate using message queues (Kafka). For example, the User Service can publish events to the `tasks` topic, and the Task Service will automatically consume and process those events based on their type. This keeps things decoupled and scalable. REST or gRPC are also options, but Kafka is already integrated and works well for async workflows.
 
-To scale task service horizontally, I can run multiple instances of the Task Service behind a load balancer. Since the service is stateless and uses Postgres and Kafka, each instance can handle requests or consume messages independently. This way, the system can handle more load just by adding more containers. Update and Delete have lock in place to avoid conflicts.
+To scale task service horizontally, I can run multiple instances of the Task Service behind a load balancer. Since the service is stateless and uses Postgres and Kafka, each instance can handle requests or consume messages independently. This way, the system can handle more load just by adding more containers. Update and Delete Api's have lock in place to avoid conflicts.
 
 ## 6. TODOS:
 
